@@ -2,7 +2,7 @@ trabajadores = input("trabajadores?")
 num_trabajadores = int(trabajadores)
 print(trabajadores);
 
-hora_salida = input("hora de salida?")
+hora_salida = input("hora de salida?")  
 print(hora_salida);
 
 x = 5
