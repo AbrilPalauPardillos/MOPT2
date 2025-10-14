@@ -5,7 +5,6 @@ import os
 # CLASE Horarios: gestiona la carga y guardado de los datos
 class Horarios:
     def __init__(self, archivo="horarios.json"):
-        """Inicializa el diccionario de horarios o carga el archivo si existe."""
         self.archivo = archivo
         self.datos = {
             'María':  ('08', '16'),
@@ -39,10 +38,7 @@ class Horarios:
 # FUNCIONES PRINCIPALES1
 
 def mostrar_registros(horarios):
-    """
-    Muestra por pantalla todos los registros de horarios.
-    Utiliza enumerate() para numerar desde 1.
-    """
+
     print("\n--- LISTADO DE HORARIOS ---")
     for i, (nombre, (entrada, salida)) in enumerate(horarios.items(), start=1):
         print(f"{i}. {nombre:10s} -> Entrada: {entrada}h | Salida: {salida}h")
@@ -50,11 +46,6 @@ def mostrar_registros(horarios):
 
 
 def validar_hora(hora_str):
-    """
-    Valida y convierte una hora introducida por el usuario.
-    Acepta formato '08' o '08:30'.
-    Devuelve la hora en formato decimal (por ejemplo 8.5) o None si no es válida.
-    """
     try:
         partes = hora_str.split(':')
         hora = int(partes[0])
@@ -69,10 +60,7 @@ def validar_hora(hora_str):
 
 
 def contar_entradas(horarios):
-    """
-    Solicita una hora al usuario y cuenta cuántos empleados
-    han llegado antes o a esa hora.
-    """
+
     while True:
         hora_usuario = input("Introduce una hora (0–23 o con minutos, ej. 08:30): ").strip()
         hora_valida = validar_hora(hora_usuario)
@@ -93,12 +81,6 @@ def contar_entradas(horarios):
 
 
 def menu():
-    """
-    Muestra un menú repetitivo con tres opciones:
-      1) Mostrar registros
-      2) Contar entradas
-      3) Salir
-    """
     horarios_obj = Horarios()
 
     while True:
