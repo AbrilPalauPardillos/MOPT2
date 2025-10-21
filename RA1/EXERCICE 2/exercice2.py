@@ -2,7 +2,6 @@ import json
 import os
 
 
-# CLASE Horarios: gestiona la carga y guardado de los datos
 class Horarios:
     def __init__(self, archivo="horarios.json"):
         self.archivo = archivo
@@ -11,14 +10,12 @@ class Horarios:
             'Juan':   ('09', '17'),
             'Lucía':  ('07', '15'),
             'Diego':  ('10', '18'),
-            # Ampliación con nuevos empleados
             'Ana':    ('08', '14'),
             'Raúl':   ('12', '20'),
             'Sofía':  ('06', '14'),
             'Pablo':  ('11', '19'),
         }
 
-        # Si ya existe el archivo, cargarlo. Si no, guardarlo.
         if os.path.exists(self.archivo):
             self.cargar()
         else:
@@ -35,7 +32,6 @@ class Horarios:
             self.datos = json.load(f)
 
 
-# FUNCIONES PRINCIPALES1
 
 def mostrar_registros(horarios):
 
