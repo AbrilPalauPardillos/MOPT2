@@ -3,7 +3,9 @@ import os
 
 
 class Horarios:
-    def __init__(self, archivo="horarios.json"):
+    def __init__(self, archivo=None):
+        if archivo is None:
+            archivo = os.path.join(os.path.dirname(__file__), "horarios.json")
         self.archivo = archivo
         self.datos = {
             'María':  ('08', '16'),
