@@ -1,3 +1,5 @@
+# Practica 2 - Gestión de horarios del personal
+
 import json
 import os
 
