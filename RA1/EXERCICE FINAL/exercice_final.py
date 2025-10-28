@@ -319,7 +319,7 @@ class GestorMiniCRM:
                 titulo = self.eventos.get(ev_id).titulo if ev_id in self.eventos else ""
                 w.writerow([ev_id, titulo, f"{ingreso:.2f}"])
 
-        print(f"✅ Informe exportado a {INFORME_CSV}")
+        print(f"Informe exportado a {INFORME_CSV}")
 
 # Menú principal
 def menu():
@@ -356,7 +356,7 @@ def menu():
         elif choice == "6":
             gestor.exportar_informe()
         elif choice == "7":
-            print("Adiós 👋")
+            print("Adiós ")
             break
         else:
             print("Opción no válida. Intenta de nuevo.")
