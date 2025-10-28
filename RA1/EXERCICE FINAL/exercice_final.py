@@ -4,7 +4,10 @@ import re
 from datetime import datetime, date
 from typing import List, Dict, Tuple, Set
 
-DATA_DIR = "data"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
+DATA_DIR = os.path.join(BASE_DIR, "data")  
+os.makedirs(DATA_DIR, exist_ok=True)
+
 CLIENTES_CSV = os.path.join(DATA_DIR, "clientes.csv")
 EVENTOS_CSV = os.path.join(DATA_DIR, "eventos.csv")
 VENTAS_CSV = os.path.join(DATA_DIR, "ventas.csv")
