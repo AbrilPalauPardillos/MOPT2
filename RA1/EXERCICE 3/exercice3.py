@@ -1,9 +1,7 @@
-# Practica 3
+import csv
+import os
 
-import csv;
-import os;
-
-# Clase para gestionar los horarios del personal
+# Clase RegistroHorario
 class RegistroHorario:
     """Representa un registro de horario de un empleado en un día concreto."""
 
@@ -45,19 +43,29 @@ class Empleado:
 
 # Clase GestorHorarios
 class GestorHorarios:
-    """Clase que gestiona la lectura, análisis y escritura de los horarios."""
+    """Gestiona la lectura, análisis y escritura de los horarios."""
 
     def __init__(self, fichero_entrada: str):
-        self.fichero_entrada = fichero_entrada
+        # Ruta absoluta al archivo, dentro de la carpeta data/
+        self.fichero_entrada = os.path.join(os.path.dirname(__file__), "data", fichero_entrada)
         self.registros = []
         self.empleados = {}
         self.empleados_por_dia = {}
 
     def leer_csv(self):
         """Lee el fichero de entrada y crea los objetos RegistroHorario."""
+        if not os.path.exists(self.fichero_entrada):
+            print(f" Error: No se encontró el archivo {self.fichero_entrada}")
+            return
+
         with open(self.fichero_entrada, newline='', encoding='utf-8') as f:
             lector = csv.reader(f, delimiter=';', quotechar='"')
+            next(lector, None)  # saltar cabecera si existe
+
             for fila in lector:
+                if len(fila) != 4:
+                    continue  # ignorar líneas mal formadas
+
                 nombre, dia, h_entrada, h_salida = fila
                 registro = RegistroHorario(nombre, dia, int(h_entrada), int(h_salida))
                 self.registros.append(registro)
@@ -72,47 +80,52 @@ class GestorHorarios:
                     self.empleados_por_dia[dia] = set()
                 self.empleados_por_dia[dia].add(nombre)
 
-        print(f"✅ Se han leído {len(self.registros)} registros correctamente.")
+        print(f"Se han leído {len(self.registros)} registros correctamente.")
 
     def mostrar_empleados_por_dia(self):
         """Muestra los empleados que trabajaron cada día."""
-        print("\n📅 Empleados por día:")
+        print("\nEmpleados por día:")
         for dia, empleados in self.empleados_por_dia.items():
-            print(f"{dia}: {', '.join(empleados)}")
+            print(f"  {dia}: {', '.join(empleados)}")
 
     def operaciones_conjuntos(self):
         """Ejemplos de operaciones de teoría de conjuntos."""
         if "Lunes" in self.empleados_por_dia and "Viernes" in self.empleados_por_dia:
             inter = self.empleados_por_dia["Lunes"] & self.empleados_por_dia["Viernes"]
-            print(f"\n👥 Empleados que trabajaron Lunes y Viernes: {inter}")
+            print(f"\n Empleados que trabajaron Lunes y Viernes: {', '.join(inter) if inter else 'Nadie'}")
 
         if "Sábado" in self.empleados_por_dia and "Domingo" in self.empleados_por_dia:
             exclusivos = self.empleados_por_dia["Sábado"] - self.empleados_por_dia["Domingo"]
-            print(f"🧍 Empleados que trabajaron sólo el Sábado: {exclusivos}")
+            print(f" Empleados que trabajaron sólo el Sábado: {', '.join(exclusivos) if exclusivos else 'Nadie'}")
 
     def empleados_madrugadores(self, hora_referencia=8):
         """Obtiene empleados que entran antes de una hora dada."""
         madrugadores = {r.empleado for r in self.registros if r.entrada < hora_referencia}
-        with open('madrugadores.csv', 'w', newline='', encoding='utf-8') as f:
+        ruta_salida = os.path.join(os.path.dirname(__file__), "data", "madrugadores.csv")
+
+        with open(ruta_salida, 'w', newline='', encoding='utf-8') as f:
             escritor = csv.writer(f, delimiter=';', quotechar='"')
             escritor.writerow(["Empleado", "Hora entrada"])
             for r in self.registros:
                 if r.entrada < hora_referencia:
                     escritor.writerow([r.empleado, r.entrada])
-        print(f"🌅 Archivo 'madrugadores.csv' creado con {len(madrugadores)} empleados.")
+
+        print(f" Archivo 'madrugadores.csv' creado con {len(madrugadores)} empleados.")
 
     def generar_resumen(self):
         """Crea un archivo con el resumen semanal de cada empleado."""
-        with open('resumen_clases.csv', 'w', newline='', encoding='utf-8') as f:
+        ruta_salida = os.path.join(os.path.dirname(__file__), "data", "resumen_clases.csv")
+
+        with open(ruta_salida, 'w', newline='', encoding='utf-8') as f:
             escritor = csv.writer(f, delimiter=';', quotechar='"')
             escritor.writerow(["Empleado", "Días trabajados", "Horas totales"])
             for empleado in self.empleados.values():
                 escritor.writerow(empleado.fila_csv())
 
-        print("📁 Archivo 'resumen_clases.csv' generado correctamente.")
+        print(" Archivo 'resumen_clases.csv' generado correctamente.")
 
 
-#Función principal
+# Función principal
 def main():
     gestor = GestorHorarios("horarios.csv")
     gestor.leer_csv()
@@ -120,8 +133,9 @@ def main():
     gestor.operaciones_conjuntos()
     gestor.empleados_madrugadores(hora_referencia=8)
     gestor.generar_resumen()
+    print("\nPrograma finalizado correctamente.")
 
 
-# Ejecución del programa
+# Ejecución
 if __name__ == "__main__":
     main()
